@@ -13,6 +13,6 @@ public class CameraMov : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		transform.position = Vector3.Lerp (transform.position, player.transform.position + new Vector3(0, 3f, -5f), smooth * Time.deltaTime);
+		transform.position = Vector3.Lerp (transform.position, player.transform.position + new Vector3(0, 7f, -0.5f), smooth * Time.deltaTime);
 	}
 }

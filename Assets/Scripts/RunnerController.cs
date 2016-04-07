@@ -7,34 +7,37 @@ public class RunnerController : MonoBehaviour {
 	public float moveForce;
 	public float speed;
 	public float jumpForce;
-	public Transform groundCheck;
-	public bool grounded;
-	private float lastJump;
 
-	private Rigidbody rb; 
+	private float lastJump;
+	private Rigidbody rb;
+	private Transform t;
+	private Animator anim;
 
 
 	// Use this for initialization
 	void Start () {
-		rb = GetComponent<Rigidbody>();
+		t = GetComponent<Transform> ();
+		anim = GetComponent<Animator> ();
+		t.transform.Rotate (0, 90, 0);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		grounded = Physics.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("ground"));
-		grounded = true;
-		if ((Input.GetButtonDown("Jump")) && grounded) {
+		float v = 2f;
+		anim.SetFloat ("Forward", v);
+		if (Input.GetKey(KeyCode.Space)) {
 			jump = true;
-
+			Debug.Log ("jump");
 		}
 	}
 
-	void FixedUpdate() {
+	/*void FixedUpdate() {
 		float h = Input.GetAxis ("Horizontal");
 		if (moveForce * rb.velocity.z < speed) {
 			rb.AddForce (Vector3.forward * moveForce);
 		}
 		if (jump) {
+			rb.AddForce(new Vector3(0f, jumpForce, 0f));
 			if (Time.time - lastJump > 3f) {
 				rb.AddForce(new Vector3(0f, jumpForce, 0f));
 				jump = false;
@@ -47,5 +50,5 @@ public class RunnerController : MonoBehaviour {
 		} else if (h * rb.velocity.x > speed) {
 			rb.AddForce (Vector3.left * h * moveForce);
 		}
-	}
+	}*/
 }

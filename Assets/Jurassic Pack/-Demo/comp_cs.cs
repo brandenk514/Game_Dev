@@ -49,12 +49,64 @@ public class comp_cs : MonoBehaviour {
 		lods = GetComponent<LODGroup>();
 		rend = GetComponentsInChildren <SkinnedMeshRenderer>();
 	}
+	
+
+	/*void OnGUI ()
+	{
+		//Skin selection
+		if (GUI.Button (new Rect (5,40,40,20), "Skin"))
+		{
+			if(skinselect!=2) skinselect ++; else skinselect =0;
+			rend[0].material.mainTexture = skin[skinselect];
+			rend[1].material.mainTexture = skin[skinselect];
+			rend[2].material.mainTexture = skin[skinselect];
+		}
+		
+		//Eyes skin selection
+		if (GUI.Button (new Rect (50,40,40,20), "Eyes"))
+		{
+			if(eyeselect!=15) eyeselect ++; else eyeselect =0;
+			rend[0].materials[1].mainTexture = eyes[eyeselect];
+			rend[1].materials[1].mainTexture = eyes[eyeselect];
+			rend[2].materials[1].mainTexture = eyes[eyeselect];
+		}
+		
+		//Get mesh infos
+		if(rend[0].isVisible) infos = rend[0].sharedMesh.triangles.Length/3+" triangles";
+		else if (rend[1].isVisible) infos = rend[1].sharedMesh.triangles.Length/3+" triangles";
+		else if (rend[2].isVisible) infos = rend[2].sharedMesh.triangles.Length/3+" triangles";
+		
+		//Lod mesh selection
+		switch (lodselect)
+		{
+		case 0:if (GUI.Button (new Rect (5,100,190,30), "LOD_Auto -> " + infos)) { lods.ForceLOD(0); lodselect=1; } break;
+		case 1:if (GUI.Button (new Rect (5,100,190,30), "LOD_0 -> " + infos)) { lods.ForceLOD(1); lodselect=2; } break;
+		case 2:if (GUI.Button (new Rect (5,100,190,30), "LOD_1 -> " + infos)) { lods.ForceLOD(2); lodselect=3; } break;
+		case 3:if (GUI.Button (new Rect (5,100,190,30), "LOD_2 -> " + infos)) {lods.ForceLOD(-1); lodselect=0; } break;
+		}
+
+		GUI.Box (new Rect (0, 170, 200, 380), "Help");
+		GUI.Label(new Rect(5,200,Screen.width,Screen.height),"Middle Mouse = Camera/Zoom");
+		GUI.Label(new Rect(5,220,Screen.width,Screen.height),"Right Mouse = Spine move");
+		GUI.Label(new Rect(5,240,Screen.width,Screen.height),"Left Mouse = Attack");
+		GUI.Label(new Rect(5,260,Screen.width,Screen.height),"W,A,S,D = Moves");
+		GUI.Label(new Rect(5,280,Screen.width,Screen.height),"LeftShift = Run");
+		GUI.Label(new Rect(5,300,Screen.width,Screen.height),"Space = Jump");
+		GUI.Label(new Rect(5,320,Screen.width,Screen.height),"E = Growl");
+		GUI.Label(new Rect(5,340,Screen.width,Screen.height),"num 1 = IdleA");
+		GUI.Label(new Rect(5,360,Screen.width,Screen.height),"num 2 = IdleB");
+		GUI.Label(new Rect(5,380,Screen.width,Screen.height),"num 3 = IdleC");
+		GUI.Label(new Rect(5,400,Screen.width,Screen.height),"num 4 = Eat");
+		GUI.Label(new Rect(5,420,Screen.width,Screen.height),"num 5 = Drink");
+		GUI.Label(new Rect(5,440,Screen.width,Screen.height),"num 6 = Sleep");
+		GUI.Label(new Rect(5,460,Screen.width,Screen.height),"num 7 = Die");
+	}*/
 
 
 
 	void OnCollisionEnter(Collision collision )
 	{
-		if(collision.gameObject.name == "Ground") anim.SetBool("Onground", true);
+		if(collision.gameObject.CompareTag("Ground")) anim.SetBool("Onground", true);
 	}
 
 
@@ -64,12 +116,11 @@ public class comp_cs : MonoBehaviour {
 		//***************************************************************************************
 		//Moves animation controller
 
-		anim.SetInteger ("State", 4);
 
 		//Attack animation controller
-		/*if (Input.GetKey (KeyCode.Mouse0) && Input.GetKey (KeyCode.LeftShift)) anim.SetInteger ("Attack", 2);
+		if (Input.GetKey (KeyCode.Mouse0) && Input.GetKey (KeyCode.LeftShift)) anim.SetInteger ("Attack", 2);
 		else if (Input.GetKey (KeyCode.Mouse0)) anim.SetInteger ("Attack", 1);
-		else anim.SetInteger ("Attack", 0);*/
+		else anim.SetInteger ("Attack", 0);
 
 		if (Input.GetKey (KeyCode.Space) &&
 		    !anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpLoop") &&
@@ -79,17 +130,19 @@ public class comp_cs : MonoBehaviour {
 		    !anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") &&
 		    !anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") &&
 		    !anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") &&
-		    !anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown")) anim.SetBool("Onground", false); //Jump
+			!anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown")) {
+			anim.SetBool("Onground", false); //Jump
+		}
 		/*else if (Input.GetKey (KeyCode.LeftShift) && Input.GetKey (KeyCode.W)) anim.SetInteger ("State", 4); //Run
 		else if (Input.GetKey (KeyCode.LeftControl) && Input.GetKey (KeyCode.W)) anim.SetInteger ("State", 3); //Steps
 		else if (Input.GetKey (KeyCode.W)) anim.SetInteger ("State", 1); //Walk
 		else if (Input.GetKey (KeyCode.S)) anim.SetInteger ("State", -1); //Steps Back*/
 		else if (Input.GetKey (KeyCode.A)) anim.SetInteger ("State", 2); //Strafe+
 		else if (Input.GetKey (KeyCode.D))anim.SetInteger ("State", -2); //Strafe-
-		/*else if (Input.GetKey (KeyCode.LeftControl)) anim.SetInteger ("State", -4); //Steps Idle
-		else anim.SetInteger ("State", 0); //Idle 
+		//else if (Input.GetKey (KeyCode.LeftControl)) anim.SetInteger ("State", -4); //Steps Idle
+		else anim.SetInteger ("State", 4); //Idle
 
-		if (Input.GetKey (KeyCode.Alpha1))
+		/*if (Input.GetKey (KeyCode.Alpha1))
 			anim.SetInteger ("Idle", 1); //Idle 1
 		else if (Input.GetKey (KeyCode.Alpha2))
 			anim.SetInteger ("Idle", 2); //Idle 2
@@ -125,7 +178,7 @@ public class comp_cs : MonoBehaviour {
 
 		//***************************************************************************************
 		//Spine control
-		if (Input.GetKey (KeyCode.Mouse1) && reset == false)
+		/*if (Input.GetKey (KeyCode.Mouse1) && reset == false)
 		{
 			turn += Input.GetAxis ("Mouse X") * 0.5F;
 			pitch += -Input.GetAxis ("Mouse Y") * 0.5F;
@@ -179,7 +232,7 @@ public class comp_cs : MonoBehaviour {
 				else
 					pitch2 = 0.0F;
 			}
-		}
+		}*/
 		
 		//Jaw control
 		if (Input.GetKey (KeyCode.E) && (
