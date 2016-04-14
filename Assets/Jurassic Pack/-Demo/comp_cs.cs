@@ -16,7 +16,9 @@ public class comp_cs : MonoBehaviour {
 	SkinnedMeshRenderer[] rend;
 	public Texture[] skin,eyes;
 	public AudioClip Smallstep,Comp_Roar1,Comp_Roar2,Comp_Call1,Comp_Call2,Comp_Jump,Bite;
-
+	public float startTimer = 0f;
+	public bool tripped;
+	public bool dead;
 
 	void Awake ()
 	{
@@ -108,9 +110,7 @@ public class comp_cs : MonoBehaviour {
 	{
 		if(collision.gameObject.CompareTag("Ground")) anim.SetBool("Onground", true);
 	}
-
-
-
+		
 	void Update ()
 	{
 		//***************************************************************************************
@@ -118,9 +118,9 @@ public class comp_cs : MonoBehaviour {
 
 
 		//Attack animation controller
-		if (Input.GetKey (KeyCode.Mouse0) && Input.GetKey (KeyCode.LeftShift)) anim.SetInteger ("Attack", 2);
+		/*if (Input.GetKey (KeyCode.Mouse0) && Input.GetKey (KeyCode.LeftShift)) anim.SetInteger ("Attack", 2);
 		else if (Input.GetKey (KeyCode.Mouse0)) anim.SetInteger ("Attack", 1);
-		else anim.SetInteger ("Attack", 0);
+		else anim.SetInteger ("Attack", 0);*/
 
 		if (Input.GetKey (KeyCode.Space) &&
 		    !anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpLoop") &&
@@ -130,17 +130,30 @@ public class comp_cs : MonoBehaviour {
 		    !anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") &&
 		    !anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") &&
 		    !anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") &&
-			!anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown")) {
-			anim.SetBool("Onground", false); //Jump
+		    !anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown")) {
+			anim.SetBool ("Onground", false); //Jump
 		}
 		/*else if (Input.GetKey (KeyCode.LeftShift) && Input.GetKey (KeyCode.W)) anim.SetInteger ("State", 4); //Run
 		else if (Input.GetKey (KeyCode.LeftControl) && Input.GetKey (KeyCode.W)) anim.SetInteger ("State", 3); //Steps
 		else if (Input.GetKey (KeyCode.W)) anim.SetInteger ("State", 1); //Walk
 		else if (Input.GetKey (KeyCode.S)) anim.SetInteger ("State", -1); //Steps Back*/
-		else if (Input.GetKey (KeyCode.A)) anim.SetInteger ("State", 2); //Strafe+
-		else if (Input.GetKey (KeyCode.D))anim.SetInteger ("State", -2); //Strafe-
+		else if (Input.GetKey (KeyCode.A))
+			anim.SetInteger ("State", 2); //Strafe+
+		else if (Input.GetKey (KeyCode.D))
+			anim.SetInteger ("State", -2); //Strafe-
 		//else if (Input.GetKey (KeyCode.LeftControl)) anim.SetInteger ("State", -4); //Steps Idle
-		else anim.SetInteger ("State", 4); //Idle
+		else if (dead) {
+			anim.SetInteger ("State", 1);
+			Debug.Log ("Stop!");
+		}
+		else {
+			if (Time.time - startTimer < 3f) {
+				anim.SetInteger ("Idle", 1);
+				//Debug.Log (startTimer);
+			} else {
+				anim.SetInteger ("State", 4);
+			}
+		}
 
 		/*if (Input.GetKey (KeyCode.Alpha1))
 			anim.SetInteger ("Idle", 1); //Idle 1
@@ -260,7 +273,7 @@ public class comp_cs : MonoBehaviour {
 			}
 		}
 
-
+		/*
 		//***************************************************************************************
 		//Sound Fx code
 		
@@ -553,7 +566,7 @@ public class comp_cs : MonoBehaviour {
 			else if(animcount!=1) soundplayed=false;
 		}
 
-
+		*/
 
 	}
 

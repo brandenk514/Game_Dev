@@ -4,15 +4,34 @@ using System.Collections;
 public class CameraMov : MonoBehaviour {
 
 	public float smooth = 1.5f;
+	public comp_cs playerTime;
 
 	private Transform player;
 
 	void Awake() {
 		player = GameObject.FindGameObjectWithTag ("Player").transform;
-
+		playerTime = FindObjectOfType<comp_cs> ();
+	
+		transform.position = new Vector3 (-5f, 10f, 10f); //Initial Pos
+		transform.rotation = Quaternion.Euler (50f, 120f, 0f); // Initial Rotation
 	}
 
 	void FixedUpdate() {
-		transform.position = Vector3.Lerp (transform.position, player.transform.position + new Vector3(0, 7f, -0.5f), smooth * Time.deltaTime);
+		Vector3 abovePos = player.position + new Vector3 (0, 5f, -0.5f);
+		if (Time.time - playerTime.startTimer > 3f) {
+			transform.position = Vector3.Lerp (transform.position, abovePos, smooth * Time.deltaTime); // follows player
+			smoothLookAt ();
+			//Debug.Log (playerTime.startTimer);
+		}
+
+	}
+
+	void OnTriggerEnter(Collider other) {
+
+	}
+
+	void smoothLookAt() {
+		Quaternion lookAtRot = Quaternion.Euler (30, 0, 0); // X angle is at 30 to see player
+		transform.rotation = Quaternion.Lerp (transform.rotation, lookAtRot, smooth * Time.deltaTime); //Looks at the player
 	}
 }
