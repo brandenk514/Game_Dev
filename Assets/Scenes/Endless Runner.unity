@@ -124,6 +124,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 482266, guid: ffb797813f5a84c109fca13a0933d534, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ffb797813f5a84c109fca13a0933d534, type: 2}
   m_IsPrefabParent: 0
@@ -242,7 +246,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 645437103}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5, z: 0.5}
@@ -290,7 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3169eb02cfced43008229e5fa9764e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plane: {fileID: 177374, guid: ffb797813f5a84c109fca13a0933d534, type: 2}
+  plane: {fileID: 0}
   planeCount: 0
 --- !u!4 &711380054
 Transform:

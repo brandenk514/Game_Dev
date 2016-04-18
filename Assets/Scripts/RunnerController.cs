@@ -26,9 +26,6 @@ public class RunnerController : MonoBehaviour {
 	void FixedUpdate () {
 		float v = 2f;
 		anim.SetFloat ("Forward", v);
-		if (Input.GetKey(KeyCode.Space)) {
-			jump = true;
-		}
 		if (Time.time - startTimer > 4f) {
 			transform.position = Vector3.Lerp (transform.position, player.transform.position, smooth * Time.deltaTime); //Lerps after player
 			if (playerTripped.tripped) {

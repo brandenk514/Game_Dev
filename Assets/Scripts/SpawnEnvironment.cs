@@ -14,19 +14,18 @@ public class SpawnEnvironment : MonoBehaviour {
 		plane = GameObject.FindGameObjectWithTag ("Ground");
 		originPos = plane.transform.position;
 		zPos = plane.transform.position.z;
-		Spawn ();
 	}
 		
 	void FixedUpdate(){
+		plane = GameObject.FindGameObjectWithTag ("Ground");
 		Spawn ();
 	}
 
 	private void Spawn() {
-		if (planeCount < 15) {
+		if (planeCount < 10) {
 			Vector3 nextPos = originPos + new Vector3 (0, 0, 8*zPos++);
 			planeCount++;
 			Instantiate (plane, nextPos, Quaternion.identity);
-			Invoke ("Spawn", 0f);
 		}
 	}
 }
