@@ -5,6 +5,7 @@ public class SpawnEnvironment : MonoBehaviour {
 
 	public GameObject plane;
 	public float zPos;
+	public int planeCount;
 
 	private Vector3 originPos;
 	private GameObject player;
@@ -17,9 +18,16 @@ public class SpawnEnvironment : MonoBehaviour {
 		Spawn ();
 	}
 
+	void FixedUpdate(){
+		Spawn ();
+	}
+
 	private void Spawn() {
-		Vector3 nextPos = originPos + new Vector3 (0, plane.transform.position.y, 10 * zPos++);
-		Instantiate (plane, nextPos, Quaternion.identity);
-		Invoke ("Spawn", 0f);
+		if (planeCount < 15) {
+			Vector3 nextPos = originPos + new Vector3 (0, 0, 8*zPos++);
+			planeCount++;
+			Instantiate (plane, nextPos, Quaternion.identity);
+		}
+		//Invoke ("Spawn", 0f);
 	}
 }
