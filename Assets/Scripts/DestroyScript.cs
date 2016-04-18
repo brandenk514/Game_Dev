@@ -14,13 +14,11 @@ public class DestroyScript : MonoBehaviour {
 		if (other.CompareTag ("Player")) {
 			Debug.Break ();
 			return;
-		} else {
-<<<<<<< HEAD
+		} else if (other.CompareTag ("Ground")) {
 			count.planeCount--;
-			Destroy (other.gameObject);
-=======
 			Destroy (other.gameObject); // Destory any object collided with 
->>>>>>> origin/master
+		} else {
+
 		}
 	}
 }
