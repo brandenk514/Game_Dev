@@ -15,8 +15,12 @@ public class DestroyScript : MonoBehaviour {
 			Debug.Break ();
 			return;
 		} else {
+<<<<<<< HEAD
 			count.planeCount--;
 			Destroy (other.gameObject);
+=======
+			Destroy (other.gameObject); // Destory any object collided with 
+>>>>>>> origin/master
 		}
 	}
 }
