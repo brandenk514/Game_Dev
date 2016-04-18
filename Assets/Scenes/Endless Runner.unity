@@ -103,6 +103,7 @@ MonoBehaviour:
   jump: 0
   smooth: 1.5
   startTimer: 0
+  hitTimer: 0
   playerTripped: {fileID: 0}
 --- !u!54 &296149172
 Rigidbody:
@@ -298,7 +299,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1225439768
 Transform:
   m_ObjectHideFlags: 0
@@ -361,7 +362,7 @@ MonoBehaviour:
   Smallstep: {fileID: 0}
   Comp_Roar1: {fileID: 0}
   Comp_Roar2: {fileID: 0}
-  Comp_Call1: {fileID: 0}
+  Comp_Call1: {fileID: 8300000, guid: f8e5d05801d514b8bb73ac3739050008, type: 3}
   Comp_Call2: {fileID: 0}
   Comp_Jump: {fileID: 0}
   Bite: {fileID: 0}

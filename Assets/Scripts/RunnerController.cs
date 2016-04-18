@@ -11,7 +11,7 @@ public class RunnerController : MonoBehaviour {
 	private Transform t;
 	private Animator anim;
 	private GameObject player;
-	public float startTimer = 0f;
+	public float startTimer = 0f, hitTimer;
 	public comp_cs playerTripped;
 
 	// Use this for initialization
@@ -26,19 +26,14 @@ public class RunnerController : MonoBehaviour {
 	void FixedUpdate () {
 		float v = 2f;
 		anim.SetFloat ("Forward", v);
-		Vector3 halfDist = (player.transform.position - transform.position) / 2;  
-		//Debug.Log ("Full Distance: " + (player.transform.position - transform.position).magnitude);
-		//Debug.Log ("Half Distance: " + halfDist.magnitude);
 		if (Input.GetKey(KeyCode.Space)) {
 			jump = true;
-			//Debug.Log ("jump");
 		}
 		if (Time.time - startTimer > 4f) {
 			transform.position = Vector3.Lerp (transform.position, player.transform.position, smooth * Time.deltaTime); //Lerps after player
 			if (playerTripped.tripped) {
-				transform.position = Vector3.Lerp (transform.position, (player.transform.position - halfDist), smooth * Time.deltaTime); //trip, then half distance
+				StartCoroutine(Lerpfor3());
 			}
-			//Debug.Log (startTimer);
 		}
 			
 	}
@@ -48,5 +43,12 @@ public class RunnerController : MonoBehaviour {
 			Debug.Log ("Dead");
 			Debug.Break ();
 		}
+	}
+
+	IEnumerator Lerpfor3() {
+		Vector3 halfDist = (player.transform.position - transform.position) / 2;  
+		transform.position = Vector3.Lerp (transform.position, (player.transform.position - halfDist), smooth * Time.deltaTime); //trip, then half distance
+		yield return new WaitForSeconds(5);
+		playerTripped.tripped = false;
 	}
 }
