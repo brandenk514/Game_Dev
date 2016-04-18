@@ -14,13 +14,13 @@ public class SimpleAllosaurusUserController : MonoBehaviour {
 			allosaurusCharacter.Jump();
 		}
 		
-		/*if (Input.GetButtonDown ("Fire1")) {
+		if (Input.GetButtonDown ("Fire1")) {
 			allosaurusCharacter.Attack();
 		}
 
 		if (Input.GetKeyDown(KeyCode.T)) {
 			allosaurusCharacter.TailAttack();
-		}*/
+		}
 	}
 	
 	private void FixedUpdate()

@@ -4,48 +4,51 @@ using System.Collections;
 public class RunnerController : MonoBehaviour {
 
 	[HideInInspector] public bool jump = false;
-	public float moveForce;
-	public float speed;
-	public float jumpForce;
-	public Transform groundCheck;
-	public bool grounded;
+	public float smooth = 0.5f;
+
 	private float lastJump;
-
-	private Rigidbody rb; 
-
+	private Rigidbody rb;
+	private Transform t;
+	private Animator anim;
+	private GameObject player;
+	public float startTimer = 0f, hitTimer;
+	public comp_cs playerTripped;
 
 	// Use this for initialization
 	void Start () {
-		rb = GetComponent<Rigidbody>();
+		t = GetComponent<Transform> ();
+		player = GameObject.FindGameObjectWithTag ("Player");
+		playerTripped = FindObjectOfType<comp_cs> ();
+		anim = GetComponent<Animator> ();
+		t.transform.Rotate (0, 90, 0); //Set enemy rotation
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		grounded = Physics.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("ground"));
-		grounded = true;
-		if ((Input.GetButtonDown("Jump")) && grounded) {
+		
+	void FixedUpdate () {
+		float v = 2f;
+		anim.SetFloat ("Forward", v);
+		if (Input.GetKey(KeyCode.Space)) {
 			jump = true;
-
 		}
-	}
-
-	void FixedUpdate() {
-		float h = Input.GetAxis ("Horizontal");
-		if (moveForce * rb.velocity.z < speed) {
-			rb.AddForce (Vector3.forward * moveForce);
-		}
-		if (jump) {
-			if (Time.time - lastJump > 3f) {
-				rb.AddForce(new Vector3(0f, jumpForce, 0f));
-				jump = false;
-				Debug.Log (lastJump);
-				lastJump = Time.time;
+		if (Time.time - startTimer > 4f) {
+			transform.position = Vector3.Lerp (transform.position, player.transform.position, smooth * Time.deltaTime); //Lerps after player
+			if (playerTripped.tripped) {
+				StartCoroutine(Lerpfor3());
 			}
 		}
-		if (h * rb.velocity.x < speed) {
-			rb.AddForce (Vector3.right * h * moveForce);
-		} else if (h * rb.velocity.x > speed) {
-			rb.AddForce (Vector3.left * h * moveForce);
+			
+	}
+
+	void OnTriggerEnter(Collider other) {
+		if (other.CompareTag ("Player")) {
+			Debug.Log ("Dead");
+			Debug.Break ();
 		}
+	}
+
+	IEnumerator Lerpfor3() {
+		Vector3 halfDist = (player.transform.position - transform.position) / 2;  
+		transform.position = Vector3.Lerp (transform.position, (player.transform.position - halfDist), smooth * Time.deltaTime); //trip, then half distance
+		yield return new WaitForSeconds(5);
+		playerTripped.tripped = false;
 	}
 }

@@ -8,7 +8,7 @@ public class SimpleAllosaurusCharacter : MonoBehaviour {
 	public float jumpSpeed=5f;
 	public float groundCheckOffset=0.3f;
 	public float groundCheckDistance=.8f;
-	public float runCycleLegOffset=.2f;
+	public float runCycleLegOffset= .2f;
 
 	void Start () {
 		allosaurusAnimator = GetComponent<Animator> ();

@@ -9,7 +9,7 @@ public class DestroyScript : MonoBehaviour {
 			Debug.Break ();
 			return;
 		} else {
-			Destroy (other.gameObject);
+			Destroy (other.gameObject); // Destory any object collided with 
 		}
 	}
 }
