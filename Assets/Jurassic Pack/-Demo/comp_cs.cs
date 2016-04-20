@@ -17,8 +17,7 @@ public class comp_cs : MonoBehaviour {
 	public Texture[] skin,eyes;
 	public AudioClip Smallstep,Comp_Roar1,Comp_Roar2,Comp_Call1,Comp_Call2,Comp_Jump,Bite;
 	public float startTimer = 0f;
-	public bool tripped;
-	public bool dead;
+	public bool tripped, dead;
 
 	void Awake ()
 	{
@@ -142,14 +141,12 @@ public class comp_cs : MonoBehaviour {
 		else if (Input.GetKey (KeyCode.D))
 			anim.SetInteger ("State", -2); //Strafe-
 		//else if (Input.GetKey (KeyCode.LeftControl)) anim.SetInteger ("State", -4); //Steps Idle
-		else if (dead) {
+		else if (tripped) {
 			anim.SetInteger ("State", 1);
-			Debug.Log ("Stop!");
 		}
 		else {
 			if (Time.time - startTimer < 3f) {
 				anim.SetInteger ("Idle", 1);
-				//Debug.Log (startTimer);
 			} else {
 				anim.SetInteger ("State", 4);
 			}

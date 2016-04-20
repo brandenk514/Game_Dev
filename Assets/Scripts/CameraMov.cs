@@ -18,10 +18,10 @@ public class CameraMov : MonoBehaviour {
 
 	void FixedUpdate() {
 		Vector3 abovePos = player.position + new Vector3 (0, 5f, -0.5f);
+
 		if (Time.time - playerTime.startTimer > 3f) {
 			transform.position = Vector3.Lerp (transform.position, abovePos, smooth * Time.deltaTime); // follows player
 			smoothLookAt ();
-			//Debug.Log (playerTime.startTimer);
 		}
 
 	}
