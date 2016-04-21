@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 451756}
   - 33: {fileID: 3306930}
   - 64: {fileID: 6433360}
+  - 65: {fileID: 6589336}
   m_Layer: 0
   m_Name: left_wall
   m_TagString: Untagged
@@ -64,7 +65,6 @@ GameObject:
   - 64: {fileID: 6418162}
   - 23: {fileID: 2380842}
   - 65: {fileID: 6501934}
-  - 54: {fileID: 5412522}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Ground
@@ -100,6 +100,7 @@ GameObject:
   - 4: {fileID: 459360}
   - 33: {fileID: 3305338}
   - 64: {fileID: 6456094}
+  - 65: {fileID: 6535652}
   m_Layer: 0
   m_Name: right_wall
   m_TagString: Untagged
@@ -139,7 +140,7 @@ Transform:
   m_GameObject: {fileID: 106698}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071066, w: -0.70710695}
   m_LocalPosition: {x: -1.6666667, y: 2.1, z: -2.245}
-  m_LocalScale: {x: 1, y: 0.33333334, z: 1.335719}
+  m_LocalScale: {x: 1, y: 0, z: 1.335719}
   m_Children: []
   m_Father: {fileID: 482266}
   m_RootOrder: 2
@@ -299,21 +300,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 177374}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!54 &5412522
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 177374}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!64 &6418162
 MeshCollider:
   m_ObjectHideFlags: 1
@@ -360,7 +346,31 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10, y: 2.220446e-16, z: 10}
+  m_Size: {x: 10, y: 1, z: 10}
+  m_Center: {x: 0, y: -0.5, z: 0}
+--- !u!65 &6535652
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189860}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 1, z: 10}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &6589336
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 106698}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 1, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &11413900
 MonoBehaviour:

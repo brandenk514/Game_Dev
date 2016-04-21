@@ -17,7 +17,7 @@ public class comp_cs : MonoBehaviour {
 	public Texture[] skin,eyes;
 	public AudioClip Smallstep,Comp_Roar1,Comp_Roar2,Comp_Call1,Comp_Call2,Comp_Jump,Bite;
 	public float startTimer = 0f;
-	public bool tripped, dead;
+	public bool tripped, dead, jump;
 
 	void Awake ()
 	{
@@ -107,7 +107,10 @@ public class comp_cs : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision )
 	{
-		if(collision.gameObject.CompareTag("Ground")) anim.SetBool("Onground", true);
+		if (collision.gameObject.CompareTag ("Ground")) {
+			anim.SetBool ("Onground", true);
+			jump = true;
+		}
 	}
 		
 	void Update ()
@@ -130,16 +133,19 @@ public class comp_cs : MonoBehaviour {
 		    !anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") &&
 		    !anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") &&
 		    !anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown")) {
-			anim.SetBool ("Onground", false); //Jump
+			anim.SetBool ("Onground", false);
+			jump = true; //Jump
 		}
 		/*else if (Input.GetKey (KeyCode.LeftShift) && Input.GetKey (KeyCode.W)) anim.SetInteger ("State", 4); //Run
 		else if (Input.GetKey (KeyCode.LeftControl) && Input.GetKey (KeyCode.W)) anim.SetInteger ("State", 3); //Steps
 		else if (Input.GetKey (KeyCode.W)) anim.SetInteger ("State", 1); //Walk
 		else if (Input.GetKey (KeyCode.S)) anim.SetInteger ("State", -1); //Steps Back*/
-		else if (Input.GetKey (KeyCode.A))
-			anim.SetInteger ("State", 2); //Strafe+
-		else if (Input.GetKey (KeyCode.D))
-			anim.SetInteger ("State", -2); //Strafe-
+		if (!jump) {
+			if (Input.GetKey (KeyCode.A))
+				anim.SetInteger ("State", 2); //Strafe+
+			else if (Input.GetKey (KeyCode.D))
+				anim.SetInteger ("State", -2); //Strafe-
+		}
 		//else if (Input.GetKey (KeyCode.LeftControl)) anim.SetInteger ("State", -4); //Steps Idle
 		else if (tripped) {
 			anim.SetInteger ("State", 1);
