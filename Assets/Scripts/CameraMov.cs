@@ -5,7 +5,7 @@ public class CameraMov : MonoBehaviour {
 
 	public float smooth = 1.5f;
 	public comp_cs playerTime;
-	public GameObject destroyer1, destroyer2;
+	public GameObject destroyer1;
 	private Transform player;
 
 	void Awake() {
@@ -37,10 +37,10 @@ public class CameraMov : MonoBehaviour {
 	}
 
 	IEnumerator activateDestroyers(){
-		yield return new WaitForSeconds (3f);
+		yield return new WaitForSeconds (5f);
 		// activate destroyers
 		destroyer1.SetActive(true);
-		destroyer2.SetActive(true);
+		Debug.Log (destroyer1.activeSelf);
 		yield return null;
 	}
 }

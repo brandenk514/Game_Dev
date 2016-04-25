@@ -36,8 +36,8 @@ public class SpawnEnvironment : MonoBehaviour {
 		if (planeCount < 10) {
 			//plane = GameObject.FindGameObjectWithTag ("Ground");
 			originPos += new Vector3 (0, 0, 20f);
-			//Instantiate (planeOptions[Random.Range(0,2)], originPos, Quaternion.identity);
-			Instantiate (planeOptions[0], originPos, Quaternion.identity);
+			Instantiate (planeOptions[Random.Range(0,2)], originPos, Quaternion.identity);
+			//Instantiate (planeOptions[0], originPos, Quaternion.identity);
 		}
 	}
 }

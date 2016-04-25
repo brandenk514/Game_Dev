@@ -7,7 +7,7 @@ public class comp_cs : MonoBehaviour {
 	Transform Spine0,Spine1,Spine2,Spine3,Spine4,Spine5,Neck0,Neck1,Neck2,Neck3,Head,Jaw,
 	Tail0,Tail1,Tail2,Tail3,Tail4,Tail5,Tail6,Tail7,Tail8,Arm1,Arm2;
 	float turn,pitch,pitch2,open,balance,temp,velocity,jumpforce,animcount, Scale = 0.0F;
-	bool reset,soundplayed,isdead =false;
+	bool reset,soundplayed;
 	int lodselect=0, skinselect =0, eyeselect=0;
 	string infos;
 	Animator anim;
@@ -17,7 +17,8 @@ public class comp_cs : MonoBehaviour {
 	public Texture[] skin,eyes;
 	public AudioClip Smallstep,Comp_Roar1,Comp_Roar2,Comp_Call1,Comp_Call2,Comp_Jump,Bite;
 	public float startTimer = 0f;
-	public bool tripped, dead, jump;
+	public int tripCount;
+	public bool tripped, jump,isdead = false;
 
 	void Awake ()
 	{
@@ -149,7 +150,10 @@ public class comp_cs : MonoBehaviour {
 		//else if (Input.GetKey (KeyCode.LeftControl)) anim.SetInteger ("State", -4); //Steps Idle
 		else if (tripped) {
 			anim.SetInteger ("State", 1);
+		} else if (isdead) {
+			anim.SetBool ("isDead", true);
 		}
+
 		else {
 			if (Time.time - startTimer < 3f) {
 				anim.SetInteger ("Idle", 1);
