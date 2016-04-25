@@ -15,9 +15,10 @@ public class DestroyScript : MonoBehaviour {
 			Debug.Break ();
 			return;
 		} else if (other.CompareTag ("Ground") || other.CompareTag("spawnPoint")) {
-			count.planeCount--;
-			Destroy (other.gameObject); // Destory any object collided with 
-		} else {
+			Destroy (other.gameObject); // Destory any object collided with
+			if (other.CompareTag ("Ground"))
+				count.Spawn ();
+//		} else {
 
 		}
 	}

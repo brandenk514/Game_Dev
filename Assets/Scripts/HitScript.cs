@@ -12,11 +12,12 @@ public class HitScript : MonoBehaviour {
 	
 	void OnTriggerEnter (Collider other) {
 		if (other.CompareTag ("Player")) {
-			player.tripped = true;
-		} else if (other.CompareTag ("Player") && player.tripped) {
-			player.dead = true;
-		} else {
-
+			if (player.tripped) {
+			//if (true){
+				player.dead = true;
+			} else {
+				player.tripped = true;
+			}
 		}
 	}
 }
