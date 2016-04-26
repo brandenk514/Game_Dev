@@ -21,7 +21,7 @@ public class SpawnEnvironment : MonoBehaviour {
 		//plane = planeOptions [0];
 		originPos = startPlane.transform.position;
 		//zPos = originPos.z;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 20; i++) {
 			Spawn ();
 		}
 	}

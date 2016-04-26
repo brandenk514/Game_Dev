@@ -12,6 +12,7 @@ public class RunnerController : MonoBehaviour {
 	public float startTimer, hitTimer;
 	public comp_cs playerTrip;
 
+
 	// Use this for initialization
 	void Start () {
 		t = GetComponent<Transform> ();
@@ -35,8 +36,7 @@ public class RunnerController : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (other.CompareTag ("Player")) {
-			Debug.Log ("Dead");
-			Debug.Break ();
+			UnityEngine.SceneManagement.SceneManager.LoadScene ("End Screen");
 		}
 	}
 

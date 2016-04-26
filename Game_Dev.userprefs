@@ -2,11 +2,15 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Jurassic Pack/-Demo/comp_cs.cs">
     <Files>
-      <File FileName="Assets/Jurassic Pack/-Demo/comp_cs.cs" Line="154" Column="34" />
-      <File FileName="Assets/Scripts/RunnerController.cs" Line="46" Column="32" />
-      <File FileName="Assets/Scripts/HitScript.cs" Line="8" Column="2" />
-      <File FileName="Assets/Scripts/SpawnEnvironment.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/CameraMov.cs" Line="40" Column="37" />
+      <File FileName="Assets/Scripts/RunnerController.cs" Line="41" Column="3" />
+      <File FileName="Assets/Scripts/CameraMov.cs" Line="28" Column="3" />
+      <File FileName="Assets/Scripts/SpawnObs.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/ScrollingUVs_Layers.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/QuitToMainMenu.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/OnButton.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/HitScript.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/DestroyScript.cs" Line="1" Column="1" />
+      <File FileName="Assets/Jurassic Pack/-Demo/comp_cs.cs" Line="53" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

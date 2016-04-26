@@ -14,7 +14,7 @@ SceneSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
-  m_Fog: 0
+  m_Fog: 1
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.01
@@ -114,7 +114,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 24df20f059a511b419077a3c8bc0187f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 24df20f059a511b419077a3c8bc0187f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -167,6 +167,10 @@ Prefab:
     - target: {fileID: 400002, guid: 24df20f059a511b419077a3c8bc0187f, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 24df20f059a511b419077a3c8bc0187f, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 24df20f059a511b419077a3c8bc0187f, type: 3}
@@ -388,6 +392,7 @@ GameObject:
   - 81: {fileID: 1491478456}
   - 114: {fileID: 1491478461}
   - 114: {fileID: 1491478462}
+  - 114: {fileID: 1491478463}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -497,6 +502,19 @@ MonoBehaviour:
   heightDensity: 5
   startDistance: 0
   fogShader: {fileID: 4800000, guid: 70d8568987ac0499f952b54c7c13e265, type: 3}
+--- !u!114 &1491478463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1491478455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2c6828cbb864492eb15b6f1907629b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeTexture: {fileID: 2800000, guid: bfe012e91fa0c4592a49fc2c3f8e520b, type: 3}
+  fadeSpeed: 0.2
 --- !u!1001 &1556855576
 Prefab:
   m_ObjectHideFlags: 0
@@ -543,6 +561,14 @@ Prefab:
     - target: {fileID: 159296, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
       propertyPath: m_TagString
       value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 104996, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11410290, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6450234, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}

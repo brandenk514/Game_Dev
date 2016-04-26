@@ -27,10 +27,6 @@ public class CameraMov : MonoBehaviour {
 
 	}
 
-	void OnTriggerEnter(Collider other) {
-
-	}
-
 	void smoothLookAt() {
 		Quaternion lookAtRot = Quaternion.Euler (30, 0, 0); // X angle is at 30 to see player
 		transform.rotation = Quaternion.Lerp (transform.rotation, lookAtRot, smooth * Time.deltaTime); //Looks at the player
