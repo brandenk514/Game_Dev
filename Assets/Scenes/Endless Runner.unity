@@ -378,6 +378,22 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 731538764}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1031862969 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 195592, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+  m_PrefabInternal: {fileID: 1556855576}
+--- !u!65 &1031862971
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1031862969}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1491478455
 GameObject:
   m_ObjectHideFlags: 0
@@ -570,8 +586,43 @@ Prefab:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6589858, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6589146, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+      propertyPath: m_Center.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 437732, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 437732, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 437732, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 498120, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 498120, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 498120, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6450234, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+    - {fileID: 6589146, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+    - {fileID: 6482412, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
+    - {fileID: 6406992, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 02ba2f00856a24a24aaee6f4ab42f94a, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1697133532 stripped
