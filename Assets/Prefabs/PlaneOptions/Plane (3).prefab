@@ -63,9 +63,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 495268}
   - 33: {fileID: 3339296}
-  - 64: {fileID: 6438432}
   - 23: {fileID: 2353822}
   - 65: {fileID: 6530506}
+  - 64: {fileID: 6491232}
   m_Layer: 0
   m_Name: Plane (3)
   m_TagString: Ground
@@ -364,7 +364,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 183200}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!64 &6438432
+--- !u!64 &6491232
 MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -374,7 +374,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Convex: 0
+  m_Convex: 1
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!65 &6530506
 BoxCollider:

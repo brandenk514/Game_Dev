@@ -36,7 +36,6 @@ public class CameraMov : MonoBehaviour {
 		yield return new WaitForSeconds (5f);
 		// activate destroyers
 		destroyer1.SetActive(true);
-		Debug.Log (destroyer1.activeSelf);
 		yield return null;
 	}
 }

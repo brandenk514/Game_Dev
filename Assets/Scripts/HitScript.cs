@@ -14,7 +14,7 @@ public class HitScript : MonoBehaviour {
 	void OnTriggerEnter (Collider other) {
 		if (other.CompareTag ("Player")) {
 			if (player.tripped) {
-				player.isdead = true;
+				player.dead = true;
 			} else {
 				player.tripped = true;
 			}
