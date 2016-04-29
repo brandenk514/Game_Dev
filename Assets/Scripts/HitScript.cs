@@ -11,14 +11,10 @@ public class HitScript : MonoBehaviour {
 		player = FindObjectOfType<comp_cs> ();
 	}
 		
-	void OnTriggerEnter (Collider other) {
+	/*void OnTriggerEnter (Collider other) {
 		if (other.CompareTag ("Player")) {
-			if (player.tripped) {
-				player.dead = true;
-			} else {
-				player.tripped = true;
-			}
+			player.tripped = true;
 		}
 
-	}
+	}*/
 }

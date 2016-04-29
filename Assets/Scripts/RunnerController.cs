@@ -44,7 +44,5 @@ public class RunnerController : MonoBehaviour {
 		Vector3 halfDist = (player.transform.position - transform.position) / 1.5f; 
 		transform.position = Vector3.Lerp (transform.position, (player.transform.position - halfDist), smooth * Time.fixedDeltaTime); //trip, then half distance;
 		yield return new WaitForSeconds(5f);
-		playerTrip.tripped = false;
-		yield return null;
 	}
 }

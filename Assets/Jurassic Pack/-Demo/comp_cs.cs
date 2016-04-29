@@ -17,9 +17,9 @@ public class comp_cs : MonoBehaviour {
 	public Texture[] skin,eyes;
 	public AudioClip Smallstep,Comp_Roar1,Comp_Roar2,Comp_Call1,Comp_Call2,Comp_Jump,Bite;
 	public float startTimer = 0f;
-	public int tripCount;
-	public bool tripped, jump,dead = false;
+	public bool tripped, jump, dead = false;
 	private bool keyLock = true;
+
 
 	void Awake ()
 	{
@@ -60,10 +60,29 @@ public class comp_cs : MonoBehaviour {
 			jump = true;
 		}
 	}
-		
+
+	void OnTriggerEnter(Collider other) {
+		if (other.gameObject.CompareTag ("spawnPoint")) {
+			Debug.Log ("Hit");
+			if (tripped) {
+				dead = true;
+				anim.Play ("Comp|Die");
+			} else {
+				tripped = true;
+				StartCoroutine (Wait5 ());
+			}
+		}
+	}
+			
+	IEnumerator Wait5() {
+		anim.SetInteger ("State", 1);
+		yield return new WaitForSeconds (5);
+		tripped = false;
+	}
+
+
 	void Update ()
 	{
-		
 		if (Input.GetKey(KeyCode.Space) || Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.D)) {
 			keyLock = true;
 		} else {
@@ -102,14 +121,10 @@ public class comp_cs : MonoBehaviour {
 				anim.SetInteger ("State", 2); //Strafe+
 			else if (Input.GetKey (KeyCode.D))
 				anim.SetInteger ("State", -2); //Strafe-
+		} else if (tripped) {
+			anim.SetInteger ("State", 1);
 		}
 		//else if (Input.GetKey (KeyCode.LeftControl)) anim.SetInteger ("State", -4); //Steps Idle
-		else if (tripped) {
-			anim.SetInteger ("State", 1);
-		} else if (dead) {
-			anim.SetBool ("isDead", true);
-		}
-
 		else {
 			if (Time.time - startTimer < 3f) {
 				anim.SetInteger ("Idle", 1);
@@ -620,7 +635,7 @@ void FixedUpdate ()
 		//adjust speed to the model's scale
 		Scale = this.transform.localScale.x;
 		//adjust gravity to the model's scale
-		Physics.gravity = new Vector3(0, -Scale*40.0f, 0);
+		Physics.gravity = new Vector3(0, -Scale*80.0f, 0);
 
 
 		//Walking
@@ -906,19 +921,7 @@ void FixedUpdate ()
 					velocity =0.0F;
 					this.transform.Translate (0, 0, velocity*Scale);
 				}
-}
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}
 }
 
 
