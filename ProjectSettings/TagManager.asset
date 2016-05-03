@@ -6,8 +6,10 @@ TagManager:
   tags:
   - Ground
   - Enemy
-  - spawnPoint
   - Destroyer
+  - Powerup
+  - Food
+  - Obstacle
   layers:
   - Default
   - TransparentFX

@@ -8,13 +8,36 @@ public class CameraMov : MonoBehaviour {
 	public GameObject destroyer1;
 	private Transform player;
 
+	public bool Shaking;
+	private float ShakeDecay;
+	private float ShakeIntensity;
+	private Vector3 OriginalPos;
+	private Quaternion OriginalRotation;
+
 	void Awake() {
 		player = GameObject.FindGameObjectWithTag ("Player").transform;
 		playerTime = FindObjectOfType<comp_cs> ();
+		Shaking = false;
 	
 		transform.position = new Vector3 (-5f, 10f, 10f); //Initial Pos
 		transform.rotation = Quaternion.Euler (50f, 120f, 0f); // Initial Rotation
 		StartCoroutine (activateDestroyers());
+
+	}
+
+	void Update() {
+		if (ShakeIntensity > 0) {
+			transform.position = OriginalPos + Random.insideUnitSphere * ShakeIntensity;
+			transform.rotation = new Quaternion (OriginalRotation.x + Random.Range (-ShakeIntensity, ShakeIntensity) * .2f, 
+				OriginalRotation.y + Random.Range (-ShakeIntensity, ShakeIntensity) * .2f,
+				OriginalRotation.z + Random.Range (-ShakeIntensity, ShakeIntensity) * .2f,
+				OriginalRotation.w + Random.Range (-ShakeIntensity, ShakeIntensity) * .2f);
+			ShakeIntensity -= ShakeDecay;
+		} else if (Shaking) {
+			Shaking = false;
+		} else {
+
+		}
 	}
 
 	void FixedUpdate() {
@@ -37,5 +60,13 @@ public class CameraMov : MonoBehaviour {
 		// activate destroyers
 		destroyer1.SetActive(true);
 		yield return null;
+	}
+
+	public void shake() {
+		OriginalPos = transform.position;
+		OriginalRotation = transform.rotation;
+		ShakeIntensity = 0.2f;
+		ShakeDecay = 0.02f;
+		Shaking = true;
 	}
 }

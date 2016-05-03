@@ -10,15 +10,12 @@ public class DestroyScript : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void OnTriggerEnter (Collider other) {
-		if (other.CompareTag ("Player")) {
-			Debug.Break ();
-			return;
-		} else if (other.CompareTag ("Ground") || other.CompareTag("spawnPoint")) {
-			Destroy (other.gameObject); // Destory any object collided with
-			if (other.CompareTag ("Ground")) {
-				count.Spawn ();
-			}
+	void OnTriggerEnter(Collider other) {
+		if (other.CompareTag ("Player") || other.CompareTag ("Enemy")) {
+			
+		} else {
+			count.Spawn ();
+			Destroy (other.gameObject);
 		}
 	}
 }

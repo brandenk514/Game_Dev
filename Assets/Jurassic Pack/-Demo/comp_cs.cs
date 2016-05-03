@@ -3,7 +3,7 @@ using System.Collections;
 
 
 public class comp_cs : MonoBehaviour {
-	
+
 	Transform Spine0,Spine1,Spine2,Spine3,Spine4,Spine5,Neck0,Neck1,Neck2,Neck3,Head,Jaw,
 	Tail0,Tail1,Tail2,Tail3,Tail4,Tail5,Tail6,Tail7,Tail8,Arm1,Arm2;
 	float turn,pitch,pitch2,open,balance,temp,velocity,jumpforce,animcount, Scale = 0.0F;
@@ -17,8 +17,10 @@ public class comp_cs : MonoBehaviour {
 	public Texture[] skin,eyes;
 	public AudioClip Smallstep,Comp_Roar1,Comp_Roar2,Comp_Call1,Comp_Call2,Comp_Jump,Bite;
 	public float startTimer = 0f;
-	public bool tripped, jump, dead = false;
+	public bool tripped, canJump, dead = false;
 	private bool keyLock = true;
+	public float health = 100f;
+	private CameraMov myCamera;
 
 
 	void Awake ()
@@ -46,23 +48,54 @@ public class comp_cs : MonoBehaviour {
 		Neck3  = this.transform.Find ("Comp/root/spine0/spine1/spine2/spine3/spine4/spine5/neck0/neck1/neck2/neck3");
 		Head   = this.transform.Find ("Comp/root/spine0/spine1/spine2/spine3/spine4/spine5/neck0/neck1/neck2/neck3/head");
 		Jaw    = this.transform.Find ("Comp/root/spine0/spine1/spine2/spine3/spine4/spine5/neck0/neck1/neck2/neck3/head/jaw0");
-	
+
 		source = GetComponent<AudioSource>();
 		anim = GetComponent<Animator>();
 		lods = GetComponent<LODGroup>();
 		rend = GetComponentsInChildren <SkinnedMeshRenderer>();
+		myCamera = FindObjectOfType<CameraMov> ();
+	}
+
+	// all pickup methods here
+	public void EatFood(){
+		if (health + 20 > 100) {
+			FullHealth ();
+		} else {
+			health += 20;
+		}
+	}
+
+	public void ActivatePowerup(int choice){
+		switch (choice) {
+		case 0:
+			FullHealth ();
+			break;
+		case 1:
+
+			break;
+		case 2:
+
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void FullHealth(){
+		health = 100f;
 	}
 
 	void OnCollisionEnter(Collision collision )
 	{
 		if (collision.gameObject.CompareTag ("Ground")) {
 			anim.SetBool ("Onground", true);
-			jump = true;
+			canJump = true;
 		}
 	}
 
 	void OnTriggerEnter(Collider other) {
-		if (other.gameObject.CompareTag ("spawnPoint")) {
+		if (other.gameObject.CompareTag ("Obstacle")) {
+			myCamera.shake ();
 			Debug.Log ("Hit");
 			if (tripped) {
 				dead = true;
@@ -71,9 +104,19 @@ public class comp_cs : MonoBehaviour {
 				tripped = true;
 				StartCoroutine (Wait5 ());
 			}
+		} else if (other.gameObject.CompareTag ("Food")) {
+			Debug.Log ("food");
+			EatFood ();
+			Destroy (other.gameObject);
+		} else if (other.gameObject.CompareTag ("Powerup")) {
+			Debug.Log ("Power");
+			ActivatePowerup (Random.Range (0, 3));
+			Destroy (other.gameObject);
+		} else {
+
 		}
 	}
-			
+
 	IEnumerator Wait5() {
 		anim.SetInteger ("State", 1);
 		yield return new WaitForSeconds (5);
@@ -83,13 +126,21 @@ public class comp_cs : MonoBehaviour {
 
 	void Update ()
 	{
+		// decrease health once per frame
+		if (health <= 0) {
+			dead = true;
+			anim.Play ("Comp|Die");
+		} else {
+			health -= 2 * Time.deltaTime;
+		}
+
 		if (Input.GetKey(KeyCode.Space) || Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.D)) {
 			keyLock = true;
 		} else {
 			keyLock = false;
 		}
 
-//		keyLock = !(Input.GetKey (KeyCode.Space) || Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.D));
+		//		keyLock = !(Input.GetKey (KeyCode.Space) || Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.D));
 
 		//***************************************************************************************
 		//Moves animation controller
@@ -101,22 +152,22 @@ public class comp_cs : MonoBehaviour {
 		else anim.SetInteger ("Attack", 0);*/
 
 		if (Input.GetKey (KeyCode.Space) &&
-		    !anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpLoop") &&
-		    !anim.GetNextAnimatorStateInfo (0).IsName ("Comp|JumpLoop") &&
-		    !anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpLoopAttack") &&
-		    !anim.GetNextAnimatorStateInfo (0).IsName ("Comp|JumpLoopAttack") &&
-		    !anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") &&
-		    !anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") &&
-		    !anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") &&
-		    !anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown")) {
+			!anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpLoop") &&
+			!anim.GetNextAnimatorStateInfo (0).IsName ("Comp|JumpLoop") &&
+			!anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpLoopAttack") &&
+			!anim.GetNextAnimatorStateInfo (0).IsName ("Comp|JumpLoopAttack") &&
+			!anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") &&
+			!anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") &&
+			!anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") &&
+			!anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown")) {
 			anim.SetBool ("Onground", false);
-			jump = true; //Jump
+			canJump = true; //Jump
 		}
 		/*else if (Input.GetKey (KeyCode.LeftShift) && Input.GetKey (KeyCode.W)) anim.SetInteger ("State", 4); //Run
 		else if (Input.GetKey (KeyCode.LeftControl) && Input.GetKey (KeyCode.W)) anim.SetInteger ("State", 3); //Steps
 		else if (Input.GetKey (KeyCode.W)) anim.SetInteger ("State", 1); //Walk
 		else if (Input.GetKey (KeyCode.S)) anim.SetInteger ("State", -1); //Steps Back*/
-		if (!jump && !keyLock) {
+		if (!canJump && !keyLock) {
 			if (Input.GetKey (KeyCode.A))
 				anim.SetInteger ("State", 2); //Strafe+
 			else if (Input.GetKey (KeyCode.D))
@@ -155,14 +206,14 @@ public class comp_cs : MonoBehaviour {
 
 		//Reset spine position
 		if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|SleepLoop") ||
-		    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Die") ||
-		    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandB") ||
-		    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandC") ||
-		    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|EatA") ||
-		    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|EatB") ||
-		    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandEat") ||
-		    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|GroundAttack")
-		   ) reset = true; else reset = false;
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Die") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandB") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandC") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|EatA") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|EatB") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandEat") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|GroundAttack")
+		) reset = true; else reset = false;
 
 
 
@@ -224,12 +275,12 @@ public class comp_cs : MonoBehaviour {
 					pitch2 = 0.0F;
 			}
 		}*/
-		
+
 		//Jaw control
 		if (Input.GetKey (KeyCode.E) && (
 			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Strafe+") ||
 			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Strafe-")))
-			open -= 5.0F; else open += 1.0F;
+		open -= 5.0F; else open += 1.0F;
 
 
 		//Reset position
@@ -254,7 +305,7 @@ public class comp_cs : MonoBehaviour {
 		/*
 		//***************************************************************************************
 		//Sound Fx code
-		
+
 		//Get current animation point
 		animcount = (anim.GetCurrentAnimatorStateInfo (0).normalizedTime) % 1.0F;
 		if(anim.GetAnimatorTransitionInfo(0).normalizedTime!=0.0F) animcount=0.0F;
@@ -262,7 +313,7 @@ public class comp_cs : MonoBehaviour {
 
 
 		if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Walk") ||
-		    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Walk-"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Walk-"))
 		{
 			if(soundplayed==false && animcount==11)
 			{
@@ -272,10 +323,10 @@ public class comp_cs : MonoBehaviour {
 			}
 			if(animcount!=11) soundplayed=false;
 		}
-		
-		
+
+
 		else if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Strafe-") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Strafe+"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Strafe+"))
 		{
 			if(soundplayed==false && (animcount==11))
 			{
@@ -284,11 +335,11 @@ public class comp_cs : MonoBehaviour {
 				soundplayed=true;
 			}
 			if(animcount!=11) soundplayed=false;
-			
+
 		}
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandB") ||
-		    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandB"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandB"))
 		{
 			if(soundplayed==false && animcount==2)
 			{
@@ -300,7 +351,7 @@ public class comp_cs : MonoBehaviour {
 		}
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandC") ||
-		    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandC"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandC"))
 		{
 			if(soundplayed==false && animcount==2)
 			{
@@ -311,9 +362,9 @@ public class comp_cs : MonoBehaviour {
 			else if(animcount!=2) soundplayed=false;
 		}
 
-	
+
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandD") ||
-		    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandD"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandD"))
 		{
 			if(soundplayed==false && animcount==2)
 			{
@@ -326,7 +377,7 @@ public class comp_cs : MonoBehaviour {
 
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandE") ||
-		    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandE"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandE"))
 		{
 			if(soundplayed==false &&(animcount==1 || animcount==8 || animcount==16))
 			{
@@ -338,7 +389,7 @@ public class comp_cs : MonoBehaviour {
 		}
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|EatA") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|EatA"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|EatA"))
 		{
 
 			if(soundplayed==false && animcount==6)
@@ -354,11 +405,11 @@ public class comp_cs : MonoBehaviour {
 
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|AttackA") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|AttackA")||
-		         anim.GetNextAnimatorStateInfo (0).IsName ("Comp|AttackB") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|AttackB") ||
-		         anim.GetNextAnimatorStateInfo (0).IsName ("Comp|JumpLoopAttack") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpLoopAttack"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|AttackA")||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|AttackB") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|AttackB") ||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|JumpLoopAttack") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpLoopAttack"))
 		{
 			if(soundplayed==false &&(animcount==2))
 			{
@@ -377,7 +428,7 @@ public class comp_cs : MonoBehaviour {
 
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunAttackA") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunAttackA"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunAttackA"))
 		{
 			if(soundplayed==false &&(animcount==2))
 			{
@@ -396,7 +447,7 @@ public class comp_cs : MonoBehaviour {
 
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunAttackB") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunAttackB"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunAttackB"))
 		{
 			if(soundplayed==false &&(animcount==3))
 			{
@@ -415,7 +466,7 @@ public class comp_cs : MonoBehaviour {
 
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|JumpAttack") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpAttack"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpAttack"))
 		{
 			if(soundplayed==false &&(animcount==3))
 			{
@@ -434,7 +485,7 @@ public class comp_cs : MonoBehaviour {
 
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|GroundAttack") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|GroundAttack"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|GroundAttack"))
 		{
 			if(soundplayed==false &&(animcount==3))
 			{
@@ -453,11 +504,11 @@ public class comp_cs : MonoBehaviour {
 		}
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|Run") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Run") ||
-		         anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunGrowl") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunGrowl"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Run") ||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunGrowl") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunGrowl"))
 		{
-			
+
 			if(soundplayed==false && animcount==4 && (
 				anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunGrowl") ||
 				anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunGrowl")))
@@ -466,7 +517,7 @@ public class comp_cs : MonoBehaviour {
 				source.PlayOneShot(Comp_Call1,Random.Range(0.75F, 1.00F));
 				soundplayed=true;
 			} 
-	
+
 			if(soundplayed==false && (animcount==10 || animcount==25))
 			{
 				source.pitch=Random.Range(1.1F, 1.25F);
@@ -478,9 +529,9 @@ public class comp_cs : MonoBehaviour {
 
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandJumpUp") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandJumpUp") ||
-		         anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpUp") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpUp"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandJumpUp") ||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpUp") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpUp"))
 		{
 			if(soundplayed==false && animcount==4)
 			{
@@ -489,14 +540,14 @@ public class comp_cs : MonoBehaviour {
 				soundplayed=true;
 			}
 			else if(animcount!=4 ) soundplayed=false;
-			
+
 		}
 
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") ||
-		         anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") ||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown"))
 		{
 			if(soundplayed==false && animcount==4)
 			{
@@ -505,12 +556,12 @@ public class comp_cs : MonoBehaviour {
 				soundplayed=true;
 			}
 			else if(animcount!=4 ) soundplayed=false;
-			
+
 		}
 
 
 		else if (!isdead && ( anim.GetNextAnimatorStateInfo (0).IsName ("Comp|Die") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Die")))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Die")))
 		{
 			if(soundplayed==false && animcount==4)
 			{
@@ -530,7 +581,7 @@ public class comp_cs : MonoBehaviour {
 
 
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|Rise") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Rise"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Rise"))
 		{
 			isdead=false;
 
@@ -554,84 +605,84 @@ public class comp_cs : MonoBehaviour {
 	//Clamp and set bone rotations
 	void LateUpdate()
 	{
-			balance = Mathf.Clamp (balance, -7.5F, 7.5F);
-			
-			if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|Run") ||
-			    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Run") ||
-			    anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunGrowl") ||
-			    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunGrowl"))
-			{
-				turn = Mathf.Clamp (turn, -7.5F, 7.5F);
-				pitch = Mathf.Clamp (pitch, 0.0F, 9.0F);
-				pitch2 = Mathf.Clamp (pitch2, -20.0F, 0.0F);
-			}
-			else
-			{
-				turn = Mathf.Clamp (turn, -15.5F, 15.5F);
-				pitch = Mathf.Clamp (pitch, 0.0F, 9.0F);
-				pitch2 = Mathf.Clamp (pitch2, -40.0F, 0.0F);
-			}
-			
-			open = Mathf.Clamp (open, -40.0F, 0.0F);
-			temp = turn - balance;
-			temp += turn;
-			temp = Mathf.Clamp (temp, -15.5F, 15.5F);
-			
-			//Spine left/right
-			Spine0.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
-			Spine1.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
-			Spine2.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
-			Spine3.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
-			Spine4.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
-			Spine5.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
-			
-			Neck0.transform.localRotation *= Quaternion.AngleAxis (temp * 2, new Vector3 (0, 0, -1));
-			Neck1.transform.localRotation *= Quaternion.AngleAxis (temp * 2, new Vector3 (0, 0, -1));
-			Neck2.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
-			Neck3.transform.localRotation *= Quaternion.AngleAxis (temp / 2, new Vector3 (0, 0, -1));
-			Head.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
-			
-			//Turning
-			Tail0.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
-			Tail1.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
-			Tail2.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
-			Tail3.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
-			Tail4.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
-			Tail5.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
-			Tail6.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
-			Tail7.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
-			Tail8.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
+		balance = Mathf.Clamp (balance, -7.5F, 7.5F);
 
-			//Jaw
-			Jaw.transform.localRotation *= Quaternion.AngleAxis (open, new Vector3 (-1, 0, 0));
-			
-			//Spine up/down
-			Spine0.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
-			Spine1.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
-			Spine2.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
-			Spine3.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
-			Spine4.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
-			Spine5.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
-			Neck0.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
-			Neck1.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
-			Neck2.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
-			Neck3.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
-			Head.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
-			
-			//Neck up/down
-			Spine0.transform.localRotation *= Quaternion.AngleAxis (pitch2, new Vector3 (-1, 0, 0));
-			Arm1.transform.localRotation *= Quaternion.AngleAxis (-pitch2, new Vector3 (-1, 0, 0));
-			Arm2.transform.localRotation *= Quaternion.AngleAxis (-pitch2, new Vector3 (0, -1, 0));
-			Neck0.transform.localRotation *= Quaternion.AngleAxis (pitch2, new Vector3 (-1, 0, 0));
-			Neck1.transform.localRotation *= Quaternion.AngleAxis (pitch2, new Vector3 (-1, 0, 0));
-			Head.transform.localRotation *= Quaternion.AngleAxis (-pitch2, new Vector3 (-1, 0, 0));
+		if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|Run") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Run") ||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunGrowl") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunGrowl"))
+		{
+			turn = Mathf.Clamp (turn, -7.5F, 7.5F);
+			pitch = Mathf.Clamp (pitch, 0.0F, 9.0F);
+			pitch2 = Mathf.Clamp (pitch2, -20.0F, 0.0F);
+		}
+		else
+		{
+			turn = Mathf.Clamp (turn, -15.5F, 15.5F);
+			pitch = Mathf.Clamp (pitch, 0.0F, 9.0F);
+			pitch2 = Mathf.Clamp (pitch2, -40.0F, 0.0F);
+		}
+
+		open = Mathf.Clamp (open, -40.0F, 0.0F);
+		temp = turn - balance;
+		temp += turn;
+		temp = Mathf.Clamp (temp, -15.5F, 15.5F);
+
+		//Spine left/right
+		Spine0.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
+		Spine1.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
+		Spine2.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
+		Spine3.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
+		Spine4.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
+		Spine5.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
+
+		Neck0.transform.localRotation *= Quaternion.AngleAxis (temp * 2, new Vector3 (0, 0, -1));
+		Neck1.transform.localRotation *= Quaternion.AngleAxis (temp * 2, new Vector3 (0, 0, -1));
+		Neck2.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
+		Neck3.transform.localRotation *= Quaternion.AngleAxis (temp / 2, new Vector3 (0, 0, -1));
+		Head.transform.localRotation *= Quaternion.AngleAxis (temp, new Vector3 (0, 0, -1));
+
+		//Turning
+		Tail0.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
+		Tail1.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
+		Tail2.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
+		Tail3.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
+		Tail4.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
+		Tail5.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
+		Tail6.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
+		Tail7.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
+		Tail8.transform.localRotation *= Quaternion.AngleAxis (balance, new Vector3 (0, 0, -1));
+
+		//Jaw
+		Jaw.transform.localRotation *= Quaternion.AngleAxis (open, new Vector3 (-1, 0, 0));
+
+		//Spine up/down
+		Spine0.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
+		Spine1.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
+		Spine2.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
+		Spine3.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
+		Spine4.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
+		Spine5.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
+		Neck0.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
+		Neck1.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
+		Neck2.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
+		Neck3.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
+		Head.transform.localRotation *= Quaternion.AngleAxis (pitch, new Vector3 (-1, 0, 0));
+
+		//Neck up/down
+		Spine0.transform.localRotation *= Quaternion.AngleAxis (pitch2, new Vector3 (-1, 0, 0));
+		Arm1.transform.localRotation *= Quaternion.AngleAxis (-pitch2, new Vector3 (-1, 0, 0));
+		Arm2.transform.localRotation *= Quaternion.AngleAxis (-pitch2, new Vector3 (0, -1, 0));
+		Neck0.transform.localRotation *= Quaternion.AngleAxis (pitch2, new Vector3 (-1, 0, 0));
+		Neck1.transform.localRotation *= Quaternion.AngleAxis (pitch2, new Vector3 (-1, 0, 0));
+		Head.transform.localRotation *= Quaternion.AngleAxis (-pitch2, new Vector3 (-1, 0, 0));
 	}
 
-	
-//***************************************************************************************
-//Model translations and rotations
-void FixedUpdate ()
-{
+
+	//***************************************************************************************
+	//Model translations and rotations
+	void FixedUpdate ()
+	{
 		//adjust speed to the model's scale
 		Scale = this.transform.localScale.x;
 		//adjust gravity to the model's scale
@@ -640,7 +691,7 @@ void FixedUpdate ()
 
 		//Walking
 		if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Walk") ||
-		    	 anim.GetNextAnimatorStateInfo (0).IsName ("Comp|Walk"))
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|Walk"))
 
 		{
 			if(Input.GetKey(KeyCode.A) && !keyLock)
@@ -663,50 +714,50 @@ void FixedUpdate ()
 			{
 				velocity = velocity - (Time.deltaTime * 0.5F); //acceleration
 			}
-			
+
 			this.transform.Translate (0, 0, velocity*Scale);
 		}
 
-			else if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Walk-") ||
-			    anim.GetNextAnimatorStateInfo (0).IsName ("Comp|Walk-"))
-				
+		else if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Walk-") ||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|Walk-"))
+
+		{
+			if(Input.GetKey(KeyCode.D)&& !keyLock)
 			{
-				if(Input.GetKey(KeyCode.D)&& !keyLock)
-				{
-					transform.localRotation *= Quaternion.AngleAxis (2.0F, new Vector3 (0, -1, 0));
-					balance += 0.5F;
-				}
-				else if(Input.GetKey(KeyCode.A)&& !keyLock)
-				{
-					this.transform.localRotation *= Quaternion.AngleAxis (2.0F, new Vector3 (0, 1, 0));
-					balance -= 0.5F;
-				}
-				
-				
-				if (velocity < 0.2F)
-				{
-					velocity = velocity + (Time.deltaTime * 0.5F); //acceleration
-				}
-				else if (velocity > 0.2F)
-				{
-					velocity = velocity - (Time.deltaTime * 0.5F); //acceleration
-				}
-				
-			this.transform.Translate (0, 0, -velocity*Scale);
+				transform.localRotation *= Quaternion.AngleAxis (2.0F, new Vector3 (0, -1, 0));
+				balance += 0.5F;
 			}
+			else if(Input.GetKey(KeyCode.A)&& !keyLock)
+			{
+				this.transform.localRotation *= Quaternion.AngleAxis (2.0F, new Vector3 (0, 1, 0));
+				balance -= 0.5F;
+			}
+
+
+			if (velocity < 0.2F)
+			{
+				velocity = velocity + (Time.deltaTime * 0.5F); //acceleration
+			}
+			else if (velocity > 0.2F)
+			{
+				velocity = velocity - (Time.deltaTime * 0.5F); //acceleration
+			}
+
+			this.transform.Translate (0, 0, -velocity*Scale);
+		}
 
 
 		//Running
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|Run") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Run") ||
-			     anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunGrowl") ||
-			     anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunGrowl") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunAttackA") ||
-		         anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunAttackA") ||
-			     anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunAttackB") ||
-			     anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunAttackB") ||
-		         anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Run") ||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunGrowl") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunGrowl") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunAttackA") ||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunAttackA") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunAttackB") ||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunAttackB") ||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown"))
 		{
 			if(Input.GetKey(KeyCode.A)&& !keyLock)
 			{
@@ -718,32 +769,32 @@ void FixedUpdate ()
 				this.transform.localRotation *= Quaternion.AngleAxis (2.0F, new Vector3 (0, 1, 0));
 				balance -= 0.5F;
 			}
-			
+
 			if (velocity < 0.4F)
 			{
 				velocity = velocity + (Time.deltaTime * 2.5F);
 			}
-			
-			if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunAttackA") &&
-			    anim.GetCurrentAnimatorStateInfo (0).normalizedTime > 0.8) velocity =0.0F;
 
-				if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunAttackB") && velocity > 0.2F)
-					velocity = velocity - (Time.deltaTime * 2.5F);
-			
-			
+			if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunAttackA") &&
+				anim.GetCurrentAnimatorStateInfo (0).normalizedTime > 0.8) velocity =0.0F;
+
+			if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunAttackB") && velocity > 0.2F)
+				velocity = velocity - (Time.deltaTime * 2.5F);
+
+
 			this.transform.Translate (0, 0, velocity*Scale);
 		}
 
 
 		//Strafe-
 		else if (anim.GetNextAnimatorStateInfo (0).IsName ("Comp|Strafe-") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Strafe-"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Strafe-"))
 		{
 			if (Input.GetKey(KeyCode.Mouse1))
 			{
 				this.transform.localRotation *= Quaternion.AngleAxis (turn, new Vector3 (0, 1, 0));
 			}
-			
+
 			if (velocity < 0.1F)
 			{
 				velocity = velocity + (Time.deltaTime * 0.5F); //acceleration
@@ -752,20 +803,20 @@ void FixedUpdate ()
 			{
 				velocity = velocity - (Time.deltaTime * 0.5F); //acceleration
 			}
-			
+
 			this.transform.Translate (velocity*Scale,0,0);
 		}
 
 
 		//Strafe+
 		else if ( anim.GetNextAnimatorStateInfo (0).IsName ("Comp|Strafe+") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Strafe+"))
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|Strafe+"))
 		{
 			if (Input.GetKey(KeyCode.Mouse1))
 			{
 				this.transform.localRotation *= Quaternion.AngleAxis (turn, new Vector3 (0, 1, 0));
 			}
-			
+
 			if (velocity < 0.1F)
 			{
 				velocity = velocity + (Time.deltaTime * 0.5F); //acceleration
@@ -774,27 +825,27 @@ void FixedUpdate ()
 			{
 				velocity = velocity - (Time.deltaTime * 0.5F); //acceleration
 			}
-			
+
 			this.transform.Translate (-velocity*Scale,0,0);
 		}
-		
+
 
 		//Stand jump
 		else if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandJumpUp") ||
 			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandJumpUp"))
 		{
 			anim.SetBool("Onground", false);
-			
+
 			if(anim.GetCurrentAnimatorStateInfo (0).normalizedTime > 0.5 && jumpforce<0.5F )
 				jumpforce = jumpforce + (Time.deltaTime * 10.0F);
-			
+
 			this.transform.Translate (0,jumpforce*Scale, 0);
 		}
 
 
 		//Running jump
 		else if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpUp") ||
-		         anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpUp"))
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpUp"))
 		{
 			anim.SetBool("Onground", false);
 
@@ -825,9 +876,9 @@ void FixedUpdate ()
 
 		//Jump loop
 		else if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpLoop") ||
-			         anim.GetNextAnimatorStateInfo (0).IsName ("Comp|JumpLoop") ||
-			     anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpLoopAttack") ||
-			         anim.GetNextAnimatorStateInfo (0).IsName ("Comp|JumpLoopAttack"))
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|JumpLoop") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|JumpLoopAttack") ||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|JumpLoopAttack"))
 		{
 
 			if(Input.GetKey(KeyCode.A))
@@ -857,9 +908,9 @@ void FixedUpdate ()
 
 		//Jump landing
 		else if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") ||
-		         anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") ||
-		         anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") ||
-		         anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown"))
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|StandJumpDown") ||
+			anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") ||
+			anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown"))
 		{
 
 			jumpforce =0.0F;
@@ -876,8 +927,8 @@ void FixedUpdate ()
 			}
 
 			if (velocity < 0.2F &&
-			    anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") ||
-			    anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown"))
+				anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|RunJumpDown") ||
+				anim.GetNextAnimatorStateInfo (0).IsName ("Comp|RunJumpDown"))
 			{
 				velocity = velocity + (Time.deltaTime * 2.5F);
 			}
@@ -910,17 +961,17 @@ void FixedUpdate ()
 					velocity = velocity + (Time.deltaTime * 5.0F);
 				}
 			} else velocity = 0.0F;
-			
+
 			this.transform.Translate (0, 0, velocity*Scale);
 		}
 
 
 		//Stop
 		else if (anim.GetCurrentAnimatorStateInfo (0).IsName ("Comp|StandA"))
-				{
-					velocity =0.0F;
-					this.transform.Translate (0, 0, velocity*Scale);
-				}
+		{
+			velocity =0.0F;
+			this.transform.Translate (0, 0, velocity*Scale);
+		}
 	}
 }
 
