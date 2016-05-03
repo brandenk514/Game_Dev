@@ -21,8 +21,8 @@ public class comp_cs : MonoBehaviour {
 	private bool keyLock = true;
 	public float health = 100f;
 	private CameraMov myCamera;
-	private Light redLight, greenLight, blueLight;
-
+	public Light redLight, greenLight, blueLight;
+	public int powerUpTimer = 7;
 
 	void Awake ()
 	{
@@ -56,8 +56,11 @@ public class comp_cs : MonoBehaviour {
 		rend = GetComponentsInChildren <SkinnedMeshRenderer>();
 		myCamera = FindObjectOfType<CameraMov> ();
 
+		greenLight.enabled = false;
+		blueLight.enabled = false;
+		redLight.enabled = false;
 	}
-
+		
 	// all pickup methods here
 	public void EatFood(){
 		if (health + 20 > 100) {
@@ -78,7 +81,7 @@ public class comp_cs : MonoBehaviour {
 			break;
 		case 2:
 			invicible = true;
-			//StartCoroutine (getInvincible ());
+			StartCoroutine (getInvincible ());
 			break;
 		default:
 			break;
@@ -100,7 +103,8 @@ public class comp_cs : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.CompareTag ("Obstacle")) {
 			if (invicible || shield) {
-
+				blueLight.enabled = false;
+				shield = false;
 			} else {
 				myCamera.shake ();
 				Debug.Log ("Hit");
@@ -118,7 +122,7 @@ public class comp_cs : MonoBehaviour {
 				Destroy (other.gameObject);
 		} else if (other.gameObject.CompareTag ("Powerup")) {
 				Debug.Log ("Power");
-				ActivatePowerup (Random.Range (0, 3));
+				ActivatePowerup (Random.Range (1,1));
 				Destroy (other.gameObject);
 		} else {
 
@@ -131,15 +135,17 @@ public class comp_cs : MonoBehaviour {
 		tripped = false;
 	}
 
-	/*IEnumerator getInvincible() {
-		greenLight.gameObject.SetActive (true);
-		yield return new WaitForSeconds (10);
+	IEnumerator getInvincible() {
+		greenLight.enabled = true;
+		yield return new WaitForSeconds (powerUpTimer);
+		greenLight.enabled = false;
 		invicible = false;
-	}*/
+	}
 
 	IEnumerator getShield() {
-		blueLight.gameObject.SetActive (true);
-		yield return new WaitForSeconds (10);
+		blueLight.enabled = true;
+		yield return new WaitForSeconds (powerUpTimer * 2);
+		blueLight.enabled = false;
 		shield = false;
 	}
 
