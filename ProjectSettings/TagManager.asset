@@ -10,6 +10,10 @@ TagManager:
   - Powerup
   - Food
   - Obstacle
+  - spawnPoint
+  - RedLight
+  - GreenLight
+  - BlueLight
   layers:
   - Default
   - TransparentFX

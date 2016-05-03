@@ -5,6 +5,10 @@ Project("{8616BED7-A2E0-7FA7-C239-D81929CD872F}") = "Game_Dev", "Assembly-CSharp
 EndProject
 Project("{8616BED7-A2E0-7FA7-C239-D81929CD872F}") = "Game_Dev", "Assembly-CSharp-Editor.csproj", "{08AB4A36-2625-00B2-60DD-7A17837EED85}"
 EndProject
+Project("{8616BED7-A2E0-7FA7-C239-D81929CD872F}") = "Game_Dev", "Assembly-UnityScript.unityproj", "{9744B3C7-F51C-0663-64D1-BB255EBBC6E4}"
+EndProject
+Project("{8616BED7-A2E0-7FA7-C239-D81929CD872F}") = "Game_Dev", "Assembly-UnityScript-Editor.unityproj", "{D08F23FF-F71B-DEEF-5EF3-30D00683BFA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,14 @@ Global
 		{08AB4A36-2625-00B2-60DD-7A17837EED85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08AB4A36-2625-00B2-60DD-7A17837EED85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08AB4A36-2625-00B2-60DD-7A17837EED85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9744B3C7-F51C-0663-64D1-BB255EBBC6E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9744B3C7-F51C-0663-64D1-BB255EBBC6E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9744B3C7-F51C-0663-64D1-BB255EBBC6E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9744B3C7-F51C-0663-64D1-BB255EBBC6E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D08F23FF-F71B-DEEF-5EF3-30D00683BFA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D08F23FF-F71B-DEEF-5EF3-30D00683BFA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D08F23FF-F71B-DEEF-5EF3-30D00683BFA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D08F23FF-F71B-DEEF-5EF3-30D00683BFA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

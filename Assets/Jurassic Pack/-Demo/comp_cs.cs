@@ -17,10 +17,11 @@ public class comp_cs : MonoBehaviour {
 	public Texture[] skin,eyes;
 	public AudioClip Smallstep,Comp_Roar1,Comp_Roar2,Comp_Call1,Comp_Call2,Comp_Jump,Bite;
 	public float startTimer = 0f;
-	public bool tripped, canJump, dead = false;
+	public bool tripped, canJump, dead = false, shield = false, invicible = false;
 	private bool keyLock = true;
 	public float health = 100f;
 	private CameraMov myCamera;
+	private Light redLight, greenLight, blueLight;
 
 
 	void Awake ()
@@ -54,6 +55,7 @@ public class comp_cs : MonoBehaviour {
 		lods = GetComponent<LODGroup>();
 		rend = GetComponentsInChildren <SkinnedMeshRenderer>();
 		myCamera = FindObjectOfType<CameraMov> ();
+
 	}
 
 	// all pickup methods here
@@ -71,10 +73,12 @@ public class comp_cs : MonoBehaviour {
 			FullHealth ();
 			break;
 		case 1:
-
+			shield = true;
+			StartCoroutine (getShield ());
 			break;
 		case 2:
-
+			invicible = true;
+			//StartCoroutine (getInvincible ());
 			break;
 		default:
 			break;
@@ -95,23 +99,27 @@ public class comp_cs : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.CompareTag ("Obstacle")) {
-			myCamera.shake ();
-			Debug.Log ("Hit");
-			if (tripped) {
-				dead = true;
-				anim.Play ("Comp|Die");
+			if (invicible || shield) {
+
 			} else {
-				tripped = true;
-				StartCoroutine (Wait5 ());
+				myCamera.shake ();
+				Debug.Log ("Hit");
+				if (tripped) {
+					dead = true;
+					anim.Play ("Comp|Die");
+				} else {
+					tripped = true;
+					StartCoroutine (Wait5 ());
+				}
 			}
 		} else if (other.gameObject.CompareTag ("Food")) {
-			Debug.Log ("food");
-			EatFood ();
-			Destroy (other.gameObject);
+				Debug.Log ("food");
+				EatFood ();
+				Destroy (other.gameObject);
 		} else if (other.gameObject.CompareTag ("Powerup")) {
-			Debug.Log ("Power");
-			ActivatePowerup (Random.Range (0, 3));
-			Destroy (other.gameObject);
+				Debug.Log ("Power");
+				ActivatePowerup (Random.Range (0, 3));
+				Destroy (other.gameObject);
 		} else {
 
 		}
@@ -123,6 +131,17 @@ public class comp_cs : MonoBehaviour {
 		tripped = false;
 	}
 
+	/*IEnumerator getInvincible() {
+		greenLight.gameObject.SetActive (true);
+		yield return new WaitForSeconds (10);
+		invicible = false;
+	}*/
+
+	IEnumerator getShield() {
+		blueLight.gameObject.SetActive (true);
+		yield return new WaitForSeconds (10);
+		shield = false;
+	}
 
 	void Update ()
 	{
