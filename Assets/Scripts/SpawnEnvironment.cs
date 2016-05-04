@@ -9,6 +9,9 @@ public class SpawnEnvironment : MonoBehaviour {
 	public GameObject plane1;
 	private GameObject[] planeOptions;
 
+	public int difficultyMultiplyer;
+	private GUIScript gui;
+
 	private int planesSinceLastObstacle;
 	public GameObject obstacle1;
 	public GameObject obstacle2;
@@ -27,6 +30,8 @@ public class SpawnEnvironment : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		planesSinceLastObstacle = 0;
+		difficultyMultiplyer = 1;
+		gui = FindObjectOfType<GUIScript> ();
 		planeOptions = new GameObject[]{plane, plane1};
 		obstacles = new GameObject[]{obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, obstacle6};
 		//plane = planeOptions [0];
@@ -41,6 +46,19 @@ public class SpawnEnvironment : MonoBehaviour {
 		//		plane = GameObject.FindGameObjectWithTag ("Ground");
 		//		Spawn ();
 		planeCount = GameObject.FindGameObjectsWithTag("Ground").Length;
+		Spawn ();
+
+		if (gui.score > 4000) {
+			difficultyMultiplyer = 5;
+		} else if (gui.score > 3000) {
+			difficultyMultiplyer = 4;
+		} else if (gui.score > 2000) {
+			difficultyMultiplyer = 3;
+		} else if (gui.score > 1000) {
+			difficultyMultiplyer = 2;
+		} else {
+			difficultyMultiplyer = 1;
+		}
 	}
 
 	public void Spawn() {
@@ -49,18 +67,16 @@ public class SpawnEnvironment : MonoBehaviour {
 			originPos += new Vector3 (0, 0, 20f);
 			Instantiate (planeOptions [Random.Range (0, 2)], originPos, Quaternion.identity);
 
-			// obstacles must be at least 1 plane apart
-			// spawn in 7 out of every 10 valid planes
-			if (Random.value < 0.7f && planesSinceLastObstacle > 1) {
+			// spawn obstacle based on difficulty
+			if (Random.value < (0.3f + (0.1f * difficultyMultiplyer)) && planesSinceLastObstacle > 5-difficultyMultiplyer) {
 				SpawnObstacle ();
 			} else {
 				planesSinceLastObstacle++;
 			}
-
-			// 20% chance a pickup appears
-			// 50% chance of being food or a powerup
-			if (Random.value < 0.4f) {
-				if (Random.value < 0.4f) {
+				
+			// spawn pickup based on difficulty
+			if (Random.value > (0.3f + (0.1f * difficultyMultiplyer))) {
+				if (Random.value < 0.8f) {
 					SpawnPickup (true);
 				} else {
 					SpawnPickup (false);

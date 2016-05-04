@@ -59,6 +59,8 @@ public class comp_cs : MonoBehaviour {
 		myCamera = FindObjectOfType<CameraMov> ();
 		scoreText = GameObject.FindGameObjectWithTag ("Score").GetComponent<Text>();
 		messageText = GameObject.FindGameObjectWithTag ("Message").GetComponent<Text>();
+
+
 		FullHealth ();
 		greenLight.enabled = false;
 		blueLight.enabled = false;
@@ -220,7 +222,7 @@ public class comp_cs : MonoBehaviour {
 			if (Input.GetKey (KeyCode.A))
 				anim.SetInteger ("State", 2); //Strafe+
 			else if (Input.GetKey (KeyCode.D))
-				anim.SetInteger ("State", -2); //Strafe-
+				anim.SetInteger ("State", -2); //Strafe-*/
 		} else if (tripped) {
 			anim.SetInteger ("State", 1);
 		}

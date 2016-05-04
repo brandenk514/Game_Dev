@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CameraMov : MonoBehaviour {
 
-	public float smooth = 1.5f;
+	public float smooth = 100f;
 	public comp_cs playerTime;
 	public GameObject destroyer1;
 	private Transform player;
@@ -41,7 +41,7 @@ public class CameraMov : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		Vector3 abovePos = player.position + new Vector3 (0, 5f, -0.5f);
+		Vector3 abovePos = player.position + new Vector3 (0, 5f, 0);
 
 		if (Time.time - playerTime.startTimer > 3f) {
 			transform.position = Vector3.Lerp (transform.position, abovePos, smooth * Time.deltaTime); // follows player
@@ -51,7 +51,7 @@ public class CameraMov : MonoBehaviour {
 	}
 
 	void smoothLookAt() {
-		Quaternion lookAtRot = Quaternion.Euler (30, 0, 0); // X angle is at 30 to see player
+		Quaternion lookAtRot = Quaternion.Euler (25, 0, 0); // X angle is at 30 to see player
 		transform.rotation = Quaternion.Lerp (transform.rotation, lookAtRot, smooth * Time.deltaTime); //Looks at the player
 	}
 

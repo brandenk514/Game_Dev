@@ -9,6 +9,7 @@ public class GUIScript : MonoBehaviour {
 	private Text scoreText, messageText;
 	//private float score = 0;
 	private Slider handle;
+	public int score;
 	 
 
 	// Use this for initialization
@@ -24,9 +25,10 @@ public class GUIScript : MonoBehaviour {
 	void Update () {
 
 		handle.value = player.health;
+		score = Mathf.RoundToInt (player.transform.position.z);
 
 		//score += Time.deltaTime;
-		scoreText.text = "Score: " + Mathf.RoundToInt(player.transform.position.z);
+		scoreText.text = "Score: " + score;
 		//canvas.GetComponentsInChildren<TextMesh>();
 
 		if (player.health < 20) {
