@@ -14,6 +14,9 @@ TagManager:
   - RedLight
   - GreenLight
   - BlueLight
+  - Message
+  - Score
+  - Handle
   layers:
   - Default
   - TransparentFX

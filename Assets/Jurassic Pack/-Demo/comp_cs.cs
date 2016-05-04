@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 
@@ -17,12 +18,13 @@ public class comp_cs : MonoBehaviour {
 	public Texture[] skin,eyes;
 	public AudioClip Smallstep,Comp_Roar1,Comp_Roar2,Comp_Call1,Comp_Call2,Comp_Jump,Bite;
 	public float startTimer = 0f;
-	public bool tripped, canJump, dead = false, shield = false, invicible = false;
+	public bool tripped, canJump, dead = false, shield = false, invicible = false, activePower = false;
 	private bool keyLock = true;
-	public float health = 100f;
+	public float health = 150f;
 	private CameraMov myCamera;
 	public Light redLight, greenLight, blueLight;
 	public int powerUpTimer = 7;
+	private Text scoreText, messageText;
 
 	void Awake ()
 	{
@@ -55,7 +57,9 @@ public class comp_cs : MonoBehaviour {
 		lods = GetComponent<LODGroup>();
 		rend = GetComponentsInChildren <SkinnedMeshRenderer>();
 		myCamera = FindObjectOfType<CameraMov> ();
-
+		scoreText = GameObject.FindGameObjectWithTag ("Score").GetComponent<Text>();
+		messageText = GameObject.FindGameObjectWithTag ("Message").GetComponent<Text>();
+		FullHealth ();
 		greenLight.enabled = false;
 		blueLight.enabled = false;
 		redLight.enabled = false;
@@ -63,7 +67,7 @@ public class comp_cs : MonoBehaviour {
 		
 	// all pickup methods here
 	public void EatFood(){
-		if (health + 20 > 100) {
+		if (health + 20 > 150) {
 			FullHealth ();
 		} else {
 			health += 20;
@@ -73,15 +77,18 @@ public class comp_cs : MonoBehaviour {
 	public void ActivatePowerup(int choice){
 		switch (choice) {
 		case 0:
-			FullHealth ();
+			StartCoroutine (getFullHealth ());
+			messageText.text = "Full Health";
 			break;
 		case 1:
 			shield = true;
 			StartCoroutine (getShield ());
+			messageText.text = "Shield";
 			break;
 		case 2:
 			invicible = true;
 			StartCoroutine (getInvincible ());
+			messageText.text = "Invincible";
 			break;
 		default:
 			break;
@@ -89,7 +96,7 @@ public class comp_cs : MonoBehaviour {
 	}
 
 	private void FullHealth(){
-		health = 100f;
+		health = 150f;
 	}
 
 	void OnCollisionEnter(Collision collision )
@@ -104,7 +111,10 @@ public class comp_cs : MonoBehaviour {
 		if (other.gameObject.CompareTag ("Obstacle")) {
 			if (invicible || shield) {
 				blueLight.enabled = false;
-				shield = false;
+				if (shield) {
+					shield = false;
+					activePower = false;
+				}
 			} else {
 				myCamera.shake ();
 				Debug.Log ("Hit");
@@ -113,17 +123,21 @@ public class comp_cs : MonoBehaviour {
 					anim.Play ("Comp|Die");
 				} else {
 					tripped = true;
+					health -= 30;
 					StartCoroutine (Wait5 ());
 				}
 			}
 		} else if (other.gameObject.CompareTag ("Food")) {
-				Debug.Log ("food");
-				EatFood ();
-				Destroy (other.gameObject);
+			Debug.Log ("food");
+			EatFood ();
+			Destroy (other.gameObject);
 		} else if (other.gameObject.CompareTag ("Powerup")) {
+			if (!activePower) {	
 				Debug.Log ("Power");
-				ActivatePowerup (Random.Range (1,1));
-				Destroy (other.gameObject);
+				activePower = true;
+				ActivatePowerup (Random.Range (0, 3));
+			}
+			Destroy (other.gameObject);
 		} else {
 
 		}
@@ -140,6 +154,7 @@ public class comp_cs : MonoBehaviour {
 		yield return new WaitForSeconds (powerUpTimer);
 		greenLight.enabled = false;
 		invicible = false;
+		activePower = false;
 	}
 
 	IEnumerator getShield() {
@@ -147,6 +162,15 @@ public class comp_cs : MonoBehaviour {
 		yield return new WaitForSeconds (powerUpTimer * 2);
 		blueLight.enabled = false;
 		shield = false;
+		activePower = false;
+	}
+
+	IEnumerator getFullHealth(){
+		FullHealth ();
+		redLight.enabled = true;
+		activePower = false;
+		yield return new WaitForSeconds (2.0f);
+		redLight.enabled = false;
 	}
 
 	void Update ()
@@ -156,7 +180,7 @@ public class comp_cs : MonoBehaviour {
 			dead = true;
 			anim.Play ("Comp|Die");
 		} else {
-			health -= 2 * Time.deltaTime;
+			health -= 4 * Time.deltaTime;
 		}
 
 		if (Input.GetKey(KeyCode.Space) || Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.D)) {

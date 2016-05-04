@@ -13,6 +13,9 @@ public class SpawnEnvironment : MonoBehaviour {
 	public GameObject obstacle1;
 	public GameObject obstacle2;
 	public GameObject obstacle3;
+	public GameObject obstacle4;
+	public GameObject obstacle5;
+	public GameObject obstacle6;
 	private GameObject[] obstacles;
 
 	public GameObject food;
@@ -25,11 +28,11 @@ public class SpawnEnvironment : MonoBehaviour {
 	void Start () {
 		planesSinceLastObstacle = 0;
 		planeOptions = new GameObject[]{plane, plane1};
-		obstacles = new GameObject[]{obstacle1,obstacle2, obstacle3};
+		obstacles = new GameObject[]{obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, obstacle6};
 		//plane = planeOptions [0];
 		originPos = startPlane.transform.position;
 		//zPos = originPos.z;
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 10; i++) {
 			Spawn ();
 		}
 	}
@@ -56,8 +59,8 @@ public class SpawnEnvironment : MonoBehaviour {
 
 			// 20% chance a pickup appears
 			// 50% chance of being food or a powerup
-			if (Random.value < 0.2f) {
-				if (Random.value < 0.5f) {
+			if (Random.value < 0.4f) {
+				if (Random.value < 0.4f) {
 					SpawnPickup (true);
 				} else {
 					SpawnPickup (false);
@@ -67,11 +70,19 @@ public class SpawnEnvironment : MonoBehaviour {
 	}
 
 	public void SpawnObstacle(){
-		float obstacleX = Random.Range (-0.5f, 0.5f);
+		float obstacleX = Random.Range (-1f, 1f);
 		/* puts a random obstacle in one of three locations on the plane
 		 */
-		Instantiate (obstacles [Random.Range (0, obstacles.Length)], originPos + new Vector3 (obstacleX, 0, 0), 
-			Quaternion.identity);
+
+		GameObject spawnObstacle = obstacles [Random.Range(0, obstacles.Length)];
+
+		if (spawnObstacle.layer.Equals(4)) {
+			Instantiate (spawnObstacle, (originPos + new Vector3 (obstacleX - 5, 0, 0)),
+				Quaternion.identity);
+		} else {
+			Instantiate (spawnObstacle, originPos + new Vector3 (obstacleX, 0, 0), 
+				Quaternion.identity);
+		}
 		planesSinceLastObstacle = 0;
 	}
 
@@ -83,7 +94,7 @@ public class SpawnEnvironment : MonoBehaviour {
 		} else {
 			pickup = powerup;
 		}
-		Instantiate (pickup, originPos + new Vector3 (Random.Range (1f, 1f), 1f , Random.Range (1f, 1f)), Quaternion.identity);
+		Instantiate (pickup, originPos + new Vector3 (Random.Range (-4f, 4f), 1f , Random.Range (-2f, 2f)), Quaternion.identity);
 
 	}
 }

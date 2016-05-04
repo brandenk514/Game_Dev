@@ -18,4 +18,8 @@ public class OnButton : MonoBehaviour {
 	public void Level(){
 		SceneManager.LoadScene ("Endless Runner");
 	}
+
+	public void Credits(){
+		SceneManager.LoadScene ("Credits");
+	}
 }
