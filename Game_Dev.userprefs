@@ -1,12 +1,8 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/SpawnEnvironment.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/comp_cs.cs">
     <Files>
-      <File FileName="Assets/Scripts/GUIScript.cs" Line="1" Column="1" />
-      <File FileName="Assets/Jurassic Pack/-Demo/comp_cs.cs" Line="681" Column="1" />
-      <File FileName="Assets/Scripts/SpawnEnvironment.cs" Line="47" Column="16" />
-      <File FileName="Assets/Scripts/CameraMov.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/DestroyScript.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/comp_cs.cs" Line="175" Column="23" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

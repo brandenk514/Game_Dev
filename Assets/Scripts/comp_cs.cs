@@ -141,7 +141,7 @@ public class comp_cs : MonoBehaviour {
 			}
 			Destroy (other.gameObject);
 		} else {
-
+			
 		}
 	}
 
@@ -170,9 +170,9 @@ public class comp_cs : MonoBehaviour {
 	IEnumerator getFullHealth(){
 		FullHealth ();
 		redLight.enabled = true;
-		activePower = false;
-		yield return new WaitForSeconds (2.0f);
+		yield return new WaitForSeconds (2);
 		redLight.enabled = false;
+		activePower = false;
 	}
 
 	void Update ()
@@ -183,6 +183,10 @@ public class comp_cs : MonoBehaviour {
 			anim.Play ("Comp|Die");
 		} else {
 			health -= 4 * Time.deltaTime;
+		}
+
+		if (!activePower) {
+			messageText.text = "";
 		}
 
 		if (Input.GetKey(KeyCode.Space) || Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.D)) {

@@ -93,7 +93,7 @@ public class SpawnEnvironment : MonoBehaviour {
 		GameObject spawnObstacle = obstacles [Random.Range(0, obstacles.Length)];
 
 		if (spawnObstacle.layer.Equals(4)) {
-			Instantiate (spawnObstacle, (originPos + new Vector3 (obstacleX - 5, 0, 0)),
+			Instantiate (spawnObstacle, (originPos + new Vector3 (obstacleX - 5, 0.2f, 0)),
 				Quaternion.identity);
 		} else {
 			Instantiate (spawnObstacle, originPos + new Vector3 (obstacleX, 0, 0), 

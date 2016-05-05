@@ -716,7 +716,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Use the A and D keys to move left and right\n\nUse the space bar to jump\n\nPowerups:
+  m_Text: "Tap the A and D keys to move left and right\n\nUse the space bar to jump\n\nPowerups:
     Green light is invincibility, blue \nlight is a shield, and red light is full
     health\n\n"
 --- !u!222 &1871978775

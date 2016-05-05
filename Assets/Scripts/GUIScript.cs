@@ -9,8 +9,7 @@ public class GUIScript : MonoBehaviour {
 	private Text scoreText, messageText;
 	//private float score = 0;
 	private Slider handle;
-	public int score;
-	 
+	public int score; 
 
 	// Use this for initialization
 	void Start () {
